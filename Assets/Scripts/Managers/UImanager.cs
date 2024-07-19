@@ -1,32 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UImanager : MonoBehaviour {
+    
     public List<UIElement> uiElements;
 
-
     public void ShowUI(UIType uiType) {
-        if (uiDictionary.TryGetValue(uiType, out Canvas canvas)) {
-            // canvas.gameObject.SetActive(true); // The UIs will do thisthemselves
-            ui.uiScript.Show();
+        var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
+        if (uiElement != null) {
+            uiElement.uiScript.Show();
         } else {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
     }
 
     public void HideUI(UIType uiType) {
-        if (uiDictionary.TryGetValue(uiType, out Canvas canvas)) {
-            canvas.gameObject.SetActive(false);
-            ui.uiScript.Hide();
+        var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
+        if (uiElement != null) {
+            uiElement.uiScript.Hide();
         } else {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
     }
 
     public void ToggleUI(UIType uiType) {
-        if (uiDictionary.TryGetValue(uiType, out Canvas canvas)) {
-            canvas.gameObject.SetActive(!canvas.gameObject.activeSelf);
+        var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
+        if (uiElement != null) {
+            bool isActive = uiElement.canvas.gameObject.activeSelf;
+            uiElement.canvas.gameObject.SetActive(!isActive);
         } else {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
