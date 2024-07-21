@@ -4,10 +4,10 @@ using UnityEngine;
 
 public abstract class IObservable : MonoBehaviour {
     List<IObserver> observers = new List<IObserver>();
-    public void Subscribe(IObserver observer) {
+    public void AddObserver(IObserver observer) {
         observers.Add(observer);
     }
-    public void UnSubscribe(IObserver observer) {
+    public void RemoveObserver(IObserver observer) {
         observers.Remove(observer);
     }
     protected void NotifyObservers<T>(T data) {

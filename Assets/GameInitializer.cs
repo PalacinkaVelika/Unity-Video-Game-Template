@@ -21,14 +21,22 @@ public class GameInitializer : MonoBehaviour {
 
     // What happens after the game is turned on
     void InitializeGame() {
-        SceneLoadingManager.Instance.LoadScene(Utilities); 
+        StartCoroutine(LoadUtilitiesAndInitializeGame());
+    }
+
+    IEnumerator LoadUtilitiesAndInitializeGame() {
+        // Tady musím použít unity scene manager abych naèetl mùj og scene manager
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Utilities", LoadSceneMode.Additive);
+        while (!asyncLoad.isDone) {
+            yield return null;
+        }
         StartCoroutine(InitializeGameC());
     }
-    
+
     IEnumerator InitializeGameC() {
-        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(mainMenuScene);
         PlayLogoAnimation();
         yield return new WaitForSeconds(0.2f);
+        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(mainMenuScene, UIanim.GetCurrentAnimatorStateInfo(0).length);
         yield return new WaitForSeconds(UIanim.GetCurrentAnimatorStateInfo(0).length);
 
         yield return new WaitUntil(() => loadTask.IsCompleted);

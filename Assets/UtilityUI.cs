@@ -5,6 +5,7 @@ using UnityEngine;
 public static class UtilityUI {
 
     public static void Fade(GameObject uiElement, bool fadeIn, float duration = 1f, bool disableOnFadeOut = true) {
+        if(fadeIn) uiElement.SetActive(true);
         CanvasGroup canvasGroup = uiElement.GetComponent<CanvasGroup>();
         if (canvasGroup == null) {
             canvasGroup = uiElement.AddComponent<CanvasGroup>();

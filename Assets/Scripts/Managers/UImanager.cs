@@ -2,15 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UImanager : MonoBehaviour {
-    
+    public static UImanager Instance { get; private set; }
     public List<UIElement> uiElements;
+    UIType openedUI;
+    UIType savedUI;
 
+    void Awake() {
+        if (Instance == null) {
+            Instance = this;
+        //    ShowUI(UIType.MainMenu); // SMAZAAAAAAAAAAAAAAT AAAAAAAAAAAAAAAAAAAAAA
+        } else {
+            Destroy(gameObject);
+        }
+    }
     public void ShowUI(UIType uiType) {
         var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
         if (uiElement != null) {
+            openedUI = uiElement.uiType;
             uiElement.uiScript.Show();
+            EventSystem.current.SetSelectedGameObject(uiElement.defaultSelectedButton.gameObject); // this is Button. i want to select it via code
         } else {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
@@ -34,18 +48,26 @@ public class UImanager : MonoBehaviour {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
     }
+    public void SaveOpenedUI() {
+        savedUI = openedUI;
+    }
+    public void ShowSavedUI() {
+        ShowUI(savedUI);
+    }
 }
 public enum UIType {
     MainMenu,
     PauseMenu,
     Dialogue,
     AlertBox,
-    HUD
+    HUD,
+    Settings
 }
 
 [System.Serializable]
 public class UIElement {
     public UIType uiType;
     public Canvas canvas;
-    public Iui uiScript;
+    public UIBehaviour uiScript;
+    public Button defaultSelectedButton;
 }

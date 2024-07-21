@@ -19,9 +19,9 @@ public class SceneLoadingManager : MonoBehaviour {
     }
 
 
-    public async Task<bool> LoadSceneAsync(SceneField scene) {
+    public async Task<bool> LoadSceneAsync(SceneField scene, float waitAfterInitialization = 1f) {
         var tcs = new TaskCompletionSource<bool>();
-        StartCoroutine(LoadSceneAsyncC(scene, tcs));
+        StartCoroutine(LoadSceneAsyncC(scene, tcs, waitAfterInitialization));
         return await tcs.Task;
     }
 
@@ -31,13 +31,11 @@ public class SceneLoadingManager : MonoBehaviour {
     }
 
     public void UnLoadScene(SceneField scene) {
-        if (loadedScenes.Contains(scene)) {
-            SceneManager.UnloadSceneAsync(scene);
-            loadedScenes.Remove(scene);
-        }
+        SceneManager.UnloadSceneAsync(scene);
+        if (loadedScenes.Contains(scene)) loadedScenes.Remove(scene);
     }
 
-    private IEnumerator LoadSceneAsyncC(SceneField scene, TaskCompletionSource<bool> tcs) {
+    IEnumerator LoadSceneAsyncC(SceneField scene, TaskCompletionSource<bool> tcs, float waitAfterInitialization) {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 
         while (!asyncLoad.isDone) {
@@ -45,6 +43,22 @@ public class SceneLoadingManager : MonoBehaviour {
         }
         loadedScenes.Add(scene);
         tcs.SetResult(true);
+        // Call the scenes Initializator
+        Iinitializer initializer = FindInitializerInScene(scene);
+        initializer?.Initialize();
+        yield return new WaitForSeconds(waitAfterInitialization);
+        initializer?.StartRunning();
+    }
+
+    Iinitializer FindInitializerInScene(SceneField scene) {
+        GameObject[] rootObjects = SceneManager.GetSceneByName(scene.SceneName).GetRootGameObjects();
+        foreach (GameObject obj in rootObjects) {
+            Iinitializer initializer = obj.GetComponentInChildren<Iinitializer>();
+            if (initializer != null) {
+                return initializer;
+            }
+        }
+        return null;
     }
 
 }

@@ -33,19 +33,37 @@ public class InputManager : MonoBehaviour {
         uiActionMap.Enable();
     }
 
-    public void SubscribeToAction(string actionName, Action<InputAction.CallbackContext> callback) {
-        InputAction action = playerActionMap.FindAction(actionName) ?? uiActionMap.FindAction(actionName);
-        if (action != null) {
-            action.performed += callback;
+    public void SubscribeToAction(string actionName, Action<InputAction.CallbackContext> callback, bool continuous = false) {
+        InputAction[] actions = new InputAction[]
+        {
+            playerActionMap.FindAction(actionName),
+            uiActionMap.FindAction(actionName)
+        };
+
+        foreach (var action in actions) {
+            if (action != null) {
+                action.performed += callback;
+                if (continuous) action.canceled += callback;
+            }
+        }
+        
+    }
+
+    public void UnsubscribeFromAction(string actionName, Action<InputAction.CallbackContext> callback, bool continuous = false) {
+        InputAction[] actions = new InputAction[]
+        {
+            playerActionMap.FindAction(actionName),
+            uiActionMap.FindAction(actionName)
+        };
+
+        foreach (var action in actions) {
+            if (action != null) {
+                action.performed -= callback;
+                if (continuous) action.canceled -= callback;
+            }
         }
     }
 
-    public void UnsubscribeFromAction(string actionName, Action<InputAction.CallbackContext> callback) {
-        InputAction action = playerActionMap.FindAction(actionName) ?? uiActionMap.FindAction(actionName);
-        if (action != null) {
-            action.performed -= callback;
-        }
-    }
 
 }
 

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Iui {
+public abstract class UIBehaviour : MonoBehaviour {
     // Animation + sound + maybe effect, everyone will handle it similarly
-    public void Show(); 
-    public void Hide();
+    public abstract void Show();
+    public abstract void Hide();
 }
