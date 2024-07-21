@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InitializerMainMenu : MonoBehaviour, Iinitializer {
+public class MainMenuInitializer : MonoBehaviour, Iinitializer {
 
     // Deactivating all objects in the scene is only one of the possible approaches
     // If for example you just want to start gameplay right away simply deactivate playerController in Initialize instead
