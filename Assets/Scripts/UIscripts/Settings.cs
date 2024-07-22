@@ -2,18 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class Settings : UIBehaviour {
     
     public GameObject canvas;
+    public AudioMixer mixer;
 
     public TMP_Dropdown resolutionDropdown;
+    public TMP_Dropdown qualityDropdown;
+
+    public Slider MasterSlider;
+    public Slider MusicSlider;
+    public Slider EffectsSlider;
 
     Resolution[] resolutions;
 
     private void Start() {
         CreateResolutions();
+        UpdateQualityOnStart();
+        UpdateSliderValuesOnStart();
     }
     // Sets up UI resolution dropdown
     void CreateResolutions() {
@@ -36,6 +45,19 @@ public class Settings : UIBehaviour {
         resolutionDropdown.RefreshShownValue();
     }
 
+    void UpdateQualityOnStart() {
+        qualityDropdown.value = QualitySettings.GetQualityLevel();
+    }
+    void UpdateSliderValuesOnStart() {
+        float currentVolume;
+        mixer.GetFloat("Master", out currentVolume);
+        MasterSlider.value = UnMixerizeAudioValue(currentVolume);
+        mixer.GetFloat("Music", out currentVolume);
+        MusicSlider.value = UnMixerizeAudioValue(currentVolume);
+        mixer.GetFloat("Effects", out currentVolume);
+        EffectsSlider.value = UnMixerizeAudioValue(currentVolume);
+    }
+
     public void SetResolution(int level) {
         Screen.SetResolution(resolutions[level].width, resolutions[level].height, Screen.fullScreen);
     }
@@ -46,6 +68,32 @@ public class Settings : UIBehaviour {
 
     public void SetFullscreen(bool fullscreen) {
         Screen.fullScreen = fullscreen;
+    }
+
+    public void SetVolumeMaster(float value) {
+        mixer.SetFloat("Master", MixerizeAudioValue(value));
+    }
+    public void SetVolumeEffects(float value) {
+        mixer.SetFloat("Effects", MixerizeAudioValue(value));
+
+    }
+    public void SetVolumeMusic(float value) {
+        mixer.SetFloat("Music", MixerizeAudioValue(value));
+
+    }
+
+    float MixerizeAudioValue(float value) {
+        float minDecibels = -80f;
+        float maxDecibels = 5f;
+        return minDecibels + (maxDecibels - minDecibels) * value;
+    }
+
+    public float UnMixerizeAudioValue(float decibels) {
+        float minDecibels = -80f;
+        float maxDecibels = 5f;
+        decibels = Mathf.Clamp(decibels, minDecibels, maxDecibels);
+        float normalizedValue = (decibels - minDecibels) / (maxDecibels - minDecibels);
+        return normalizedValue;
     }
 
     // Otevøe naposledy otevøené UI (to které basically zavolalo tohle okno)

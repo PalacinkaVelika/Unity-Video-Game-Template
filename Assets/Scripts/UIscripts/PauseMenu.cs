@@ -44,12 +44,16 @@ public class PauseMenu : UIBehaviour {
             Show();
             GameManager.Instance.ChangeGameState(GameState.Paused);
             InputManager.Instance?.SubscribeToAction("Pause", OnPause);
+            AudioManager.Instance.PauseAllSounds();
+            ThemeManager.Instance.PauseAllThemes();
             Time.timeScale = 0f;
             isPaused = true;
         } else {
             Hide();
             Time.timeScale = 1.0f;
             GameManager.Instance.ChangeToPreviousGameState();
+            AudioManager.Instance.ResumeAllSounds();
+            ThemeManager.Instance.ResumeAllThemes();
             isPaused = false;
         }
     }

@@ -6,12 +6,13 @@ public static class UtilityUI {
 
     public static void Fade(GameObject uiElement, bool fadeIn, float duration = 1f, bool disableOnFadeOut = true) {
         if(fadeIn) uiElement.SetActive(true);
+        
         CanvasGroup canvasGroup = uiElement.GetComponent<CanvasGroup>();
         if (canvasGroup == null) {
             canvasGroup = uiElement.AddComponent<CanvasGroup>();
         }
-
-        uiElement.GetComponent<MonoBehaviour>().StartCoroutine(FadeCoroutine(uiElement, canvasGroup, fadeIn, duration, disableOnFadeOut));
+        // if u wanna fade out an element that isnt active then ur dumb
+        if(!(!fadeIn && !uiElement.active)) uiElement.GetComponent<MonoBehaviour>().StartCoroutine(FadeCoroutine(uiElement, canvasGroup, fadeIn, duration, disableOnFadeOut));
     }
 
     static IEnumerator FadeCoroutine(GameObject uiElement, CanvasGroup canvasGroup, bool fadeIn, float duration, bool disableOnFadeOut) {

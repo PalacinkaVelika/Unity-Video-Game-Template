@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour {
     private InputActionMap playerActionMap;
     private InputActionMap uiActionMap;
 
-    private void Awake() {
+    void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(this.gameObject);
         } else {

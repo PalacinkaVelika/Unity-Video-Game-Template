@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DialogueUI : UIBehaviour {
     public override void Hide() {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void Show() {
-        throw new System.NotImplementedException();
+        
     }
     // Start is called before the first frame update
     void Start() {

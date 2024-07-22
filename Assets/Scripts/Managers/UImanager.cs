@@ -14,11 +14,18 @@ public class UImanager : MonoBehaviour {
     void Awake() {
         if (Instance == null) {
             Instance = this;
-        //    ShowUI(UIType.MainMenu); // SMAZAAAAAAAAAAAAAAT AAAAAAAAAAAAAAAAAAAAAA
+            HideAllUIs();
         } else {
             Destroy(gameObject);
         }
     }
+
+    public void HideAllUIs() {
+        foreach (UIElement uiElement in uiElements) {
+            uiElement.uiScript?.Hide();
+        }
+    }
+
     public void ShowUI(UIType uiType) {
         var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
         if (uiElement != null) {

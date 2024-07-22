@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IObserver {
     void OnJump(InputAction.CallbackContext context) {
         if (context.performed) {
             rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+            AudioManager.Instance.PlaySound(SoundType.Punch);
         }
     }
 
