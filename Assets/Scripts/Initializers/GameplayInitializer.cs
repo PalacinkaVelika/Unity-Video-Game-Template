@@ -18,6 +18,7 @@ public class GameplayInitializer : MonoBehaviour, Iinitializer {
         }
         GameManager.Instance.ChangeGameState(GameState.Running);
         ThemeManager.Instance?.PlayTheme(SoundType.ThemeSongFrFr, true);
+        UImanager.Instance.ShowUI(UIType.HUD);
     }
 
 }

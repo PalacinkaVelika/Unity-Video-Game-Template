@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 952f7df59a08ebb42aa83c8709c94653, type: 3}
-  m_Name: punch
+  m_Name: ManScream
   m_EditorClassIdentifier: 
-  soundName: Punch
+  soundName: manScream
   mixerType: 0
-  clip: {fileID: 8300000, guid: 304735fc22f62e344a6be67214cff496, type: 3}
+  clip: {fileID: 8300000, guid: f67a94d168cc21b409e01bc00d952681, type: 3}
   loop: 0
-  volume: 0.5
+  volume: 1
   pitch: 1

@@ -45,6 +45,10 @@ public class MainMenu : UIBehaviour {
         }
     }
 
+    public void LoadGame() {
+        
+    }
+
     public void GoToSettings() {
         UImanager.Instance.SaveOpenedUI();
         UImanager.Instance.ShowUI(UIType.Settings);

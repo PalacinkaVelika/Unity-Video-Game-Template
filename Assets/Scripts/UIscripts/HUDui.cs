@@ -1,22 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class HUDui : UIBehaviour {
+    public static HUDui Instance { get; private set; }
+    public GameObject canvas;
+    public TMP_Text text_score;
+
+
+    void Awake() {
+        if (Instance == null) {
+            Instance = this;
+        } else {
+            Destroy(gameObject);
+        }
+    }
     public override void Hide() {
-        
+        canvas.SetActive(false);
     }
 
     public override void Show() {
-        
-    }
-    // Start is called before the first frame update
-    void Start() {
-
+        canvas.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update() {
-
+    public void UpdateScore(int score) {
+        text_score.text = score.ToString();
     }
 }

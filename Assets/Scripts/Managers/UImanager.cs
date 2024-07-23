@@ -31,7 +31,7 @@ public class UImanager : MonoBehaviour {
         if (uiElement != null) {
             openedUI = uiElement.uiType;
             uiElement.uiScript.Show();
-            EventSystem.current.SetSelectedGameObject(uiElement.defaultSelectedButton.gameObject); // this is Button. i want to select it via code
+            if(uiElement.defaultSelectedButton != null) EventSystem.current.SetSelectedGameObject(uiElement.defaultSelectedButton.gameObject); // this is Button. i want to select it via code
         } else {
             Debug.LogWarning($"UIType {uiType} not found.");
         }

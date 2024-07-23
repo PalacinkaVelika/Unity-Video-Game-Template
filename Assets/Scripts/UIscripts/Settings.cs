@@ -23,6 +23,9 @@ public class Settings : UIBehaviour {
         CreateResolutions();
         UpdateQualityOnStart();
         UpdateSliderValuesOnStart();
+        // i want it to defaulty not suck :)
+        SetFullscreen(true);
+        SetResolution(resolutions.Length-1);
     }
     // Sets up UI resolution dropdown
     void CreateResolutions() {
@@ -60,14 +63,17 @@ public class Settings : UIBehaviour {
 
     public void SetResolution(int level) {
         Screen.SetResolution(resolutions[level].width, resolutions[level].height, Screen.fullScreen);
+        print("setting res: " + Screen.currentResolution);
     }
 
     public void SetQuality(int level) {
         QualitySettings.SetQualityLevel(level);
+        print("setting qual: " + QualitySettings.GetQualityLevel());
     }
 
     public void SetFullscreen(bool fullscreen) {
         Screen.fullScreen = fullscreen;
+        print("setting fs: " + Screen.fullScreen);
     }
 
     public void SetVolumeMaster(float value) {

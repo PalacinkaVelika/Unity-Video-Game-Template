@@ -19,31 +19,39 @@ public class AudioPauseManager : MonoBehaviour {
     public void PauseAllSounds(List<AudioSource> allAudioSources) {
         pausedAudioSources.Clear();
         foreach (AudioSource source in allAudioSources) {
-            if (source.isPlaying) {
-                source.Pause();
-                pausedAudioSources.Add(source);
+            if (source != null) {
+                if (source.isPlaying) {
+                    source.Pause();
+                    pausedAudioSources.Add(source);
+                }
             }
         }
     }
 
     public void ResumeAllSounds() {
         foreach (AudioSource source in pausedAudioSources) {
-            source.UnPause();
+            if (source != null) {
+                source.UnPause();
+            }
         }
         pausedAudioSources.Clear();
     }
 
     public void PauseSound(AudioSource source) {
         if (source.isPlaying) {
-            source.Pause();
-            pausedAudioSources.Add(source);
+            if (source != null) {
+                source.Pause();
+                pausedAudioSources.Add(source);
+            }
         }
     }
 
     public void ResumeSound(AudioSource source) {
         if (pausedAudioSources.Contains(source)) {
-            source.UnPause();
-            pausedAudioSources.Remove(source);
+            if (source != null) {
+                source.UnPause();
+                pausedAudioSources.Remove(source);
+            }
         }
     }
 }

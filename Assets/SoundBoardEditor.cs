@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(SoundBoard))]
 public class SoundBoardEditor : Editor {
@@ -73,3 +74,5 @@ public class SoundBoardEditor : Editor {
         AssetDatabase.Refresh();
     }
 }
+
+# endif
