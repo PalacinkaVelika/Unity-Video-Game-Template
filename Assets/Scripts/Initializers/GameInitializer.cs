@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 public class GameInitializer : MonoBehaviour {
     public static GameInitializer Instance { get; private set; }
     public Animator UIanim;
-    public SceneField Utilities;
-    public SceneField mainMenuScene;
     bool mainMenuLoaded = false;
 
     void Awake() {
@@ -36,11 +34,8 @@ public class GameInitializer : MonoBehaviour {
     IEnumerator InitializeGameC() {
         PlayLogoAnimation();
         yield return new WaitForSeconds(0.2f);
-        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(mainMenuScene, UIanim.GetCurrentAnimatorStateInfo(0).length);
-        yield return new WaitForSeconds(UIanim.GetCurrentAnimatorStateInfo(0).length);
-
+        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(SceneType.MainMenuScene, UIanim.GetCurrentAnimatorStateInfo(0).length);
         yield return new WaitUntil(() => loadTask.IsCompleted);
-
         if (loadTask.Result) {
             UtilityUI.Fade(UIanim.gameObject, false);
         } else {

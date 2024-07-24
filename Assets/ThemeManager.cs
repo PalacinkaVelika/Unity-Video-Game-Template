@@ -26,8 +26,8 @@ public class ThemeManager : MonoBehaviour {
         if (!activeThemes.Contains(theme)) {
             activeThemes.Add(theme);
             if (fadeIn) {
-                StartCoroutine(FadeInTheme(theme, fadeDuration));
-            } else {
+                audioManager.PlaySound(theme, fadeDuration);
+            }else {
                 audioManager.PlaySound(theme);
             }
         }
@@ -36,7 +36,7 @@ public class ThemeManager : MonoBehaviour {
     public void StopTheme(SoundType theme, bool fadeOut = false, float fadeDuration = 1.0f) {
         if (activeThemes.Contains(theme)) {
             if (fadeOut) {
-                StartCoroutine(FadeOutTheme(theme, fadeDuration));
+                audioManager.FadeOutSound(theme, fadeDuration);
             } else {
                 audioManager.StopSound(theme);
                 activeThemes.Remove(theme);
@@ -63,30 +63,5 @@ public class ThemeManager : MonoBehaviour {
             audioManager.ResumeSound(theme);
         }
         pausedThemes.Clear();
-    }
-
-    private IEnumerator FadeInTheme(SoundType theme, float duration) {
-        audioManager.PlaySound(theme);
-        AudioSource source = audioManager.GetAudioSource(theme);
-        source.volume = 0;
-        float targetVolume = soundBoard.GetSound(theme).volume;
-
-        while (source.volume < targetVolume) {
-            source.volume += targetVolume * Time.deltaTime / duration;
-            yield return null;
-        }
-    }
-
-    private IEnumerator FadeOutTheme(SoundType theme, float duration) {
-        AudioSource source = audioManager.GetAudioSource(theme);
-        float startVolume = source.volume;
-
-        while (source.volume > 0) {
-            source.volume -= startVolume * Time.deltaTime / duration;
-            yield return null;
-        }
-
-        audioManager.StopSound(theme);
-        activeThemes.Remove(theme);
     }
 }

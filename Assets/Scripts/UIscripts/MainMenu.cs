@@ -6,8 +6,6 @@ public class MainMenu : UIBehaviour {
 
     public static MainMenu Instance { get; private set; }
     public GameObject canvas;
-    public SceneField gameplayScene;
-    public SceneField mainMenuScene;
 
     bool loading = false;
 
@@ -65,12 +63,14 @@ public class MainMenu : UIBehaviour {
         yield return new WaitForSeconds(1.2f);
         // Loading logic
         UImanager.Instance.HideUI(UIType.MainMenu);
-        SceneLoadingManager.Instance.UnLoadScene(mainMenuScene);
-        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(gameplayScene, 0f); // 0f wait time cuz i dont have a loading screen here
+        SceneLoadingManager.Instance.UnLoadSceneAsync(SceneType.MainMenuScene);
+        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(SceneType.GameplayScene, 0f, true);
         yield return new WaitUntil(() => loadTask.IsCompleted);
-        // Fade out / stop loading screen once loaded in
-        FindAnyObjectByType<Fader>().Fade(false);
-        loading = false;
+        if (loadTask.Result) {
+            // Fade out / stop loading screen once loaded in
+            FindAnyObjectByType<Fader>().Fade(false);
+            loading = false;
+        }
     }
 
 }

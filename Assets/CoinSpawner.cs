@@ -12,6 +12,7 @@ public class CoinSpawner : MonoBehaviour, ISaveable {
     public float minY = 0f;
     public float maxY = 10f;
     HUDui hud;
+
     void OnEnable() {
         hud = HUDui.Instance;
     //    SaveManager.Instance.RegisterSaveable(this);
@@ -32,7 +33,8 @@ public class CoinSpawner : MonoBehaviour, ISaveable {
         float randomX = Random.Range(minX, maxX);
         float randomY = Random.Range(minY, maxY);
         Vector3 newCoinPosition = new Vector3(randomX, randomY, 0f);
-        Instantiate(Coin, newCoinPosition, Quaternion.identity);
+        // The correct way to instantiate objects and have them stay in the scene
+        SceneLoadingManager.Instance.InstantiateObjectInScene(Coin, newCoinPosition, SceneType.GameplayScene);
     } 
 
     void UpdateHUD() {

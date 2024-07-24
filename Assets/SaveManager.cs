@@ -17,7 +17,6 @@ public class SaveManager : MonoBehaviour {
             Instance = this;
             savePath = Application.persistentDataPath + "/savefile.dat";
             saveableObjects = new List<ISaveable>();
-            DontDestroyOnLoad(gameObject); // Make sure SaveManager persists between scene loads
         }
     }
 

@@ -21,4 +21,8 @@ public class MainMenuInitializer : MonoBehaviour, Iinitializer {
         UImanager.Instance.ShowUI(UIType.MainMenu);
         GameManager.Instance.ChangeGameState(GameState.MainMenu);
     }
+
+    public void Unload() {
+        
+    }
 }

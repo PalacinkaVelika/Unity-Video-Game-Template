@@ -68,7 +68,8 @@ public enum UIType {
     Dialogue,
     AlertBox,
     HUD,
-    Settings
+    Settings,
+    LoadingScreen
 }
 
 [System.Serializable]

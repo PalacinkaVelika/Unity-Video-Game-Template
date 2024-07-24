@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayInitializer : MonoBehaviour, Iinitializer {
 
@@ -21,4 +22,10 @@ public class GameplayInitializer : MonoBehaviour, Iinitializer {
         UImanager.Instance.ShowUI(UIType.HUD);
     }
 
+    public void Unload() {
+        // Stop all sounds
+        AudioManager.Instance.StopAllSounds(true);
+        ThemeManager.Instance.StopAllThemes();
+        UImanager.Instance.HideUI(UIType.HUD);
+    }
 }

@@ -34,13 +34,13 @@ public class AudioManager : MonoBehaviour {
         mixerGroups[MixerType.EnvironmentEffect] = audioMixer.FindMatchingGroups("AmbienceEffects")[0];
     }
 
-    public void PlaySound(SoundType soundType, Vector3 position = default(Vector3), bool is3D = false) {
+    public void PlaySound(SoundType soundType, float fadeInDuration = 0f, Vector3 position = default(Vector3), bool is3D = false) {
         Sound sound = SoundBoard.Instance.GetSound(soundType);
         if (sound != null) {
             GameObject soundGameObject = new GameObject("Sound_" + soundType);
             AudioSource source = soundGameObject.AddComponent<AudioSource>();
             source.clip = sound.clip;
-            source.volume = sound.volume;
+            source.volume = 0f; // Start volume at 0 for fade-in
             source.pitch = sound.pitch;
             source.loop = sound.loop;
             source.spatialBlend = is3D ? 1.0f : 0.0f;
@@ -49,6 +49,12 @@ public class AudioManager : MonoBehaviour {
 
             source.Play();
             allAudioSources.Add(source);
+
+            if (fadeInDuration > 0) {
+                StartCoroutine(FadeIn(source, sound.volume, fadeInDuration));
+            } else {
+                source.volume = sound.volume; // Set the final volume if no fade-in
+            }
 
             if (!sound.loop) {
                 Destroy(soundGameObject, sound.clip.length);
@@ -76,7 +82,28 @@ public class AudioManager : MonoBehaviour {
             StartCoroutine(FadeOutAndStop(source, duration));
         }
     }
-
+    public void StopAllSounds(bool fade = false, float fadeDuration = 1f) {
+        if (fade) {
+            foreach (AudioSource source in new List<AudioSource>(allAudioSources)) {
+                StartCoroutine(FadeOutAndStop(source, fadeDuration));
+            }
+            foreach (AudioSource source in new List<AudioSource>(pausedAudioSources)) {
+                StartCoroutine(FadeOutAndStop(source, fadeDuration));
+            }
+        } else {
+            foreach (AudioSource source in new List<AudioSource>(allAudioSources)) {
+                source.Stop();
+                Destroy(source.gameObject);
+            }
+            foreach (AudioSource source in new List<AudioSource>(pausedAudioSources)) {
+                source.Stop();
+                Destroy(source.gameObject);
+            }
+            activeLoopingSources.Clear();
+            allAudioSources.Clear();
+            pausedAudioSources.Clear();
+        }
+    }
     public void PauseAllSounds() {
         AudioPauseManager.Instance.PauseAllSounds(allAudioSources);
     }
@@ -99,18 +126,21 @@ public class AudioManager : MonoBehaviour {
         }
     }
 
-    private IEnumerator FadeOutAndStop(AudioSource audioSource, float duration) {
+    IEnumerator FadeOutAndStop(AudioSource audioSource, float duration) {
+        if (audioSource == null) yield break;
         float startVolume = audioSource.volume;
-
-        while (audioSource.volume > 0) {
-            audioSource.volume -= startVolume * Time.deltaTime / duration;
+        float timeElapsed = 0f;
+        while (audioSource != null && audioSource.volume > 0) {
+            timeElapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0, timeElapsed / duration);
             yield return null;
         }
-
-        audioSource.Stop();
-        Destroy(audioSource.gameObject);
-        activeLoopingSources.Remove(ConvertStringToSoundType(audioSource.clip.name));
-        allAudioSources.Remove(audioSource);
+        if (audioSource != null) {
+            audioSource.Stop();
+            Destroy(audioSource.gameObject);
+            activeLoopingSources.Remove(ConvertStringToSoundType(audioSource?.clip?.name ?? ""));
+            allAudioSources.Remove(audioSource); 
+        }
     }
 
     SoundType ConvertStringToSoundType(string soundName) {
@@ -137,6 +167,20 @@ public class AudioManager : MonoBehaviour {
             return activeLoopingSources[soundType];
         }
         return null;
+    }
+
+    IEnumerator FadeIn(AudioSource audioSource, float targetVolume, float duration) {
+        float timeElapsed = 0f;
+
+        while (audioSource != null && timeElapsed < duration) {
+            timeElapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0, targetVolume, timeElapsed / duration);
+            yield return null;
+        }
+
+        if (audioSource != null) {
+            audioSource.volume = targetVolume; // Ensure final volume is set
+        }
     }
 }
 

@@ -8,8 +8,6 @@ using UnityEngine.Windows;
 
 public class PauseMenu : UIBehaviour {
     public static PauseMenu Instance { get; private set; }
-    public SceneField menuScene;
-    public SceneField gameplayScene;
 
     public GameObject canvas;
     bool canPause = false;
@@ -73,17 +71,24 @@ public class PauseMenu : UIBehaviour {
     }
 
     IEnumerator GoMenu() {
-        UnPause();
-        Fader.Instance.Fade(true, .5f);
-        yield return new WaitForSeconds(.7f);
-        SceneLoadingManager.Instance.UnLoadScene(gameplayScene); // THIS MUST BE CHANGED FOR THE DYNAMIC STUFF TO WORK
-        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(menuScene, 1f);
-        yield return new WaitForSeconds(.7f); // wait just for the lols
-
+        Time.timeScale = 1.0f;
+        UImanager.Instance.ShowUI(UIType.LoadingScreen);
+        yield return new WaitForSeconds(.5f);
+        // unload gameplay scenes
+        var unloadTask = SceneLoadingManager.Instance.UnLoadAllGameplayScenes();
+        yield return new WaitUntil(() => unloadTask.IsCompleted);
+        if (!unloadTask.IsCompletedSuccessfully) {
+            print("unloading all gameplay scenes fucked up");
+            yield break;
+        }
+        // load main menu scene
+        float loadingScreenLength = 1f; // Default loading screen length 
+        print("Trying to load the scene");
+        var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(SceneType.MainMenuScene, loadingScreenLength);
         yield return new WaitUntil(() => loadTask.IsCompleted);
-
         if (loadTask.Result) {
-            Fader.Instance.Fade(false, .5f);
+            UnPause();
+            UImanager.Instance.HideUI(UIType.LoadingScreen);
         } else {
             Debug.LogError("Failed to load main menu scene.");
         }
