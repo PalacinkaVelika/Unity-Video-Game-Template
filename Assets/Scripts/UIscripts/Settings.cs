@@ -25,7 +25,7 @@ public class Settings : UIBehaviour {
         resolutionDropdown.ClearOptions();
         List<string> resolutionList = new List<string>();
         foreach (Resolution resolution in resolutions) {
-            string option = resolution.width + " x " + resolution.height;
+            string option = resolution.width + " x " + resolution.height + ": " + resolution.refreshRate + "Hz";
             resolutionList.Add(option);
         }
         resolutionDropdown.AddOptions(resolutionList);
