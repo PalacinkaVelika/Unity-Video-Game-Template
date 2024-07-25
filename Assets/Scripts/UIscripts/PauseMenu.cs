@@ -26,6 +26,7 @@ public class PauseMenu : UIBehaviour {
     }
 
     public override void Hide() {
+        UImanager.Instance.ToggleAllButtonsInUI(UIType.PauseMenu, true);
         canvas.SetActive(false);
     }
 
@@ -68,6 +69,7 @@ public class PauseMenu : UIBehaviour {
     }
 
     public void GoToMenu() {
+        UImanager.Instance.ToggleAllButtonsInUI(UIType.PauseMenu, false);
         StartCoroutine(GoMenu());
     }
 

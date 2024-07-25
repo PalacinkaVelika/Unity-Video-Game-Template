@@ -55,6 +55,19 @@ public class UImanager : MonoBehaviour {
             Debug.LogWarning($"UIType {uiType} not found.");
         }
     }
+
+    public void ToggleAllButtonsInUI(UIType uiType, bool enable) {
+        var uiElement = uiElements.FirstOrDefault(element => element.uiType == uiType);
+        if (uiElement != null) {
+            var buttons = uiElement.canvas.GetComponentsInChildren<Button>(true);
+            foreach (var button in buttons) {
+                button.interactable = enable;
+            }
+        } else {
+            Debug.LogWarning($"UIType {uiType} not found.");
+        }
+    }
+
     public void SaveOpenedUI() {
         savedUI = openedUI;
     }

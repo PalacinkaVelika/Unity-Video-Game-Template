@@ -18,6 +18,7 @@ public class MainMenu : UIBehaviour {
     }
 
     public override void Hide() {
+        UImanager.Instance.ToggleAllButtonsInUI(UIType.MainMenu, true);
         UtilityUI.Fade(canvas, false, 0f);
     }
 
@@ -32,6 +33,7 @@ public class MainMenu : UIBehaviour {
     public void NewGame() {
         if (!loading) {
             loading = true;
+            UImanager.Instance.ToggleAllButtonsInUI(UIType.MainMenu, false);
             StartCoroutine(LoadGameplay());
         }
     }
@@ -39,6 +41,7 @@ public class MainMenu : UIBehaviour {
     public void LoadGame() {
         if (!loading) {
             loading = true;
+            UImanager.Instance.ToggleAllButtonsInUI(UIType.MainMenu, false);
             StartCoroutine(LoadSavedGame()); // Will load the save file and hold on to it
         }
     }
