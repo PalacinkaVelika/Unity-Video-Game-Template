@@ -7,7 +7,7 @@ public class SettingsManager: MonoBehaviour {
     public static SettingsManager Instance {  get; private set; }
     public  AudioMixer mixer;
     Resolution[] resolutions;
-    int currentResolutionIndex;
+    int currentResolutionIndex = 0;
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -27,13 +27,7 @@ public class SettingsManager: MonoBehaviour {
     }
 
     public int GetCurrentResolutionIndex() {
-        for (int i = 0; i < resolutions.Length; i++) {
-            if (Screen.currentResolution.width == resolutions[i].width &&
-                Screen.currentResolution.height == resolutions[i].height) {
-                return i;
-            }
-        }
-        return 0;
+        return currentResolutionIndex;
     }
 
     public void SetQuality(int level) {

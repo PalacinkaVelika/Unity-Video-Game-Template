@@ -13,6 +13,7 @@ public class SaveManager : MonoBehaviour {
     private GameData loadedSaveData;
     private SettingsData loadedSettingsData;
     private string savePath;
+    private string settingsPath;
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -20,6 +21,7 @@ public class SaveManager : MonoBehaviour {
         } else {
             Instance = this;
             savePath = Application.persistentDataPath + "/savefile.dat";
+            settingsPath = Application.persistentDataPath + "/settingsfile.dat";
             saveableObjects = new List<ISaveable>();
         }
     }
@@ -107,9 +109,13 @@ public class SaveManager : MonoBehaviour {
     }
 
     public void SaveSettings(SettingsData settingsData) {
-        BinaryFormatter formatter = new BinaryFormatter();
-        using (FileStream file = File.Create(GetSettingsPath())) {
-            formatter.Serialize(file, settingsData);
+        try {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream file = File.Create(GetSettingsPath())) {
+                formatter.Serialize(file, settingsData);
+            }
+        } catch (Exception e) {
+            Debug.LogError("Saving settings failed: " + e.Message);
         }
     }
 
@@ -130,6 +136,6 @@ public class SaveManager : MonoBehaviour {
     }
         
     string GetSettingsPath() {
-        return Application.persistentDataPath + "/settings.dat";
+        return settingsPath;
     }
 }

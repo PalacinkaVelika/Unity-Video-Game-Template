@@ -48,6 +48,7 @@ public class Settings : UIBehaviour {
 
     public void OnResolutionChange(int level) {
         SettingsManager.Instance.SetResolution(level);
+        SettingsManager.Instance.SaveSettings();
     }
 
     public void OnQualityChange(int level) {
