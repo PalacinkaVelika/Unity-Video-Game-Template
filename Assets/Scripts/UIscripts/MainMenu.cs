@@ -16,13 +16,6 @@ public class MainMenu : UIBehaviour {
             Destroy(gameObject);
         }
     }
-    void Start() {
-
-    }
-
-    void Update() {
-
-    }
 
     public override void Hide() {
         UtilityUI.Fade(canvas, false, 0f);
@@ -38,13 +31,16 @@ public class MainMenu : UIBehaviour {
 
     public void NewGame() {
         if (!loading) {
-            StartCoroutine(LoadGameplay());
             loading = true;
+            StartCoroutine(LoadGameplay());
         }
     }
 
     public void LoadGame() {
-        
+        if (!loading) {
+            loading = true;
+            StartCoroutine(LoadSavedGame()); // Will load the save file and hold on to it
+        }
     }
 
     public void GoToSettings() {
@@ -55,6 +51,26 @@ public class MainMenu : UIBehaviour {
 
     public void QuitGame() {
         Application.Quit();
+    }
+
+    IEnumerator LoadSavedGame() {
+        var task = SaveManager.Instance.LoadGameDataAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+        if (task.IsCompleted) {
+            FindAnyObjectByType<Fader>().Fade(true, 1f);
+            yield return new WaitForSeconds(1.2f);
+            // Loading logic
+            UImanager.Instance.HideUI(UIType.MainMenu);
+            SceneLoadingManager.Instance.UnLoadSceneAsync(SceneType.MainMenuScene);
+            var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(SceneType.GameplayScene, 0f, true);
+            yield return new WaitUntil(() => loadTask.IsCompleted);
+            if (loadTask.Result) {
+                // Fade out / stop loading screen once loaded in
+                SaveManager.Instance.LoadGame(); // Have to let them know to load their shit
+                FindAnyObjectByType<Fader>().Fade(false);
+                loading = false;
+            }
+        }
     }
 
     IEnumerator LoadGameplay() {

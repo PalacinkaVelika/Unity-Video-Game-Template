@@ -54,6 +54,7 @@ public class PauseMenu : UIBehaviour {
     }
     void UnPause() {
         UImanager.Instance.HideUI(UIType.PauseMenu);
+        UImanager.Instance.HideUI(UIType.Settings);
         Time.timeScale = 1.0f;
         GameManager.Instance.ChangeToPreviousGameState();
         AudioManager.Instance.ResumeAllSounds();

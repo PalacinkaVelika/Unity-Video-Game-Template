@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 
 public class SceneLoadingManager : MonoBehaviour {
     public static SceneLoadingManager Instance { get; private set; }
@@ -31,6 +29,7 @@ public class SceneLoadingManager : MonoBehaviour {
     public void LoadScene(SceneType sceneType) {
         SceneField scene = SceneList.Instance.GetScene(sceneType);
         SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+        SaveManager.Instance.UpdateSaveableList();
         loadedScenes.Add(scene);
     }
 
@@ -72,6 +71,9 @@ public class SceneLoadingManager : MonoBehaviour {
         // Call the initializer
         yield return CallSceneInitializerC(scene, loadingScreenLength);
 
+        // Update the saveable list
+        SaveManager.Instance.UpdateSaveableList();
+
         tcs.SetResult(true);
     }
 
@@ -85,6 +87,10 @@ public class SceneLoadingManager : MonoBehaviour {
         if (loadedScenes.Contains(scene)) {
             loadedScenes.Remove(scene);
         }
+
+        // Update the saveable list
+        SaveManager.Instance.UpdateSaveableList();
+
         tcs.SetResult(true);
     }
 
@@ -98,7 +104,6 @@ public class SceneLoadingManager : MonoBehaviour {
     }
 
     Iinitializer FindInitializerInScene(SceneField scene) {
-        print("scnamen" + scene);
         GameObject[] rootObjects = SceneManager.GetSceneByName(scene.SceneName).GetRootGameObjects();
         foreach (GameObject obj in rootObjects) {
             Iinitializer initializer = obj.GetComponentInChildren<Iinitializer>();

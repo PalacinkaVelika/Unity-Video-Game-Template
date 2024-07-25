@@ -15,6 +15,7 @@ public class CoinSpawner : MonoBehaviour, ISaveable {
 
     void OnEnable() {
         hud = HUDui.Instance;
+        UpdateHUD();
     //    SaveManager.Instance.RegisterSaveable(this);
     }
 
@@ -26,7 +27,7 @@ public class CoinSpawner : MonoBehaviour, ISaveable {
         ScreenEffectManager.Instance.ScreenShakeImpulse(2f,2f,.1f);
         SpawnNewCoin();
         // saving after every coin cuz fuck you
-    //    SaveManager.Instance.SaveGame();
+        SaveManager.Instance.SaveGame(); // This is definetly wrong and i will get arrested for writing into a file gazillion times a second
     }
 
     void SpawnNewCoin() {
@@ -41,18 +42,13 @@ public class CoinSpawner : MonoBehaviour, ISaveable {
         hud.UpdateScore(score);
     }
 
-    public void DecodeData(Dictionary<string, object> data) {
-        if (data.ContainsKey("score")) {
-            score = (int)data["score"];
-        } else {
-            print("cant load score");
-        }
+    public void SaveData(GameData data) {
+        data.playerScore = score;
     }
 
-    public Dictionary<string, object> EncodeData() {
-        var data = new Dictionary<string, object>();
-        data["score"] = score;
-        return data;
+    public void LoadData(GameData data) {
+        score = data.playerScore;
+        UpdateHUD();
     }
 
 }

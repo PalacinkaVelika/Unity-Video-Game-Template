@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface ISaveable {
-    public Dictionary<string, object> EncodeData();
-    public void DecodeData(Dictionary<string, object> data);
+    void SaveData(GameData data);
+    void LoadData(GameData data);
 }
 /*
  * 
