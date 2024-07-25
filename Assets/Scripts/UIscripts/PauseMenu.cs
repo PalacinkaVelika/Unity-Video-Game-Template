@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Windows;
 
-public class PauseMenu : UIBehaviour {
+public class PauseMenu : UIBehaviour, IObserver {
     public static PauseMenu Instance { get; private set; }
 
     public GameObject canvas;
@@ -16,6 +16,7 @@ public class PauseMenu : UIBehaviour {
     void Awake() {
         if (Instance == null) {
             Instance = this;
+            StartCoroutine(WaitForGameManagerInitialization());
         } else {
             Destroy(gameObject);
         }
@@ -23,6 +24,13 @@ public class PauseMenu : UIBehaviour {
 
     void Start() {
         InputManager.Instance?.SubscribeToAction("Pause", OnPause);
+    }
+
+    IEnumerator WaitForGameManagerInitialization() {
+        while (GameManager.Instance == null) {
+            yield return null;
+        }
+        GameManager.Instance.AddObserver(this);
     }
 
     public override void Hide() {
@@ -63,7 +71,7 @@ public class PauseMenu : UIBehaviour {
         isPaused = false;
     }
     public void GoToSettings() {
-        UImanager.Instance.SaveOpenedUI();
+        UImanager.Instance.SaveOpenedUI(UIType.PauseMenu);
         UImanager.Instance.ShowUI(UIType.Settings);
         UImanager.Instance.HideUI(UIType.PauseMenu);
     }
@@ -107,4 +115,24 @@ public class PauseMenu : UIBehaviour {
         canPause = value;
     }
 
+    public void OnNotify<T>(T data) {
+        switch (data) {
+            case GameState.Running:
+                SetCanPause(true);
+                break;
+            case GameState.Paused:
+                SetCanPause(true);
+                break;
+            case GameState.MainMenu:
+                SetCanPause(false);
+                break;
+            case GameState.Cutscene:
+                SetCanPause(true);
+                break;
+            case GameState.Dialogue:
+                SetCanPause(true);
+                break;
+
+        }
+    }
 }

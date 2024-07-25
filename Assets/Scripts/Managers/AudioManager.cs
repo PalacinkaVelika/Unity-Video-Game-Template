@@ -8,7 +8,6 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour {
     public static AudioManager Instance { get; private set; }
     public AudioMixer audioMixer;
-    AudioPauseManager audioPauseManager;
     Dictionary<MixerType, AudioMixerGroup> mixerGroups;
     Dictionary<SoundType, AudioSource> activeLoopingSources;
     List<AudioSource> allAudioSources;

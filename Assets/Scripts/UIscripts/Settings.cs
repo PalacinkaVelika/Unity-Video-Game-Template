@@ -6,103 +6,75 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class Settings : UIBehaviour {
-    
     public GameObject canvas;
-    public AudioMixer mixer;
-
     public TMP_Dropdown resolutionDropdown;
     public TMP_Dropdown qualityDropdown;
-
     public Slider MasterSlider;
     public Slider MusicSlider;
     public Slider EffectsSlider;
 
-    Resolution[] resolutions;
 
-    private void Start() {
-        CreateResolutions();
+    public void UpdateUISettingsElements() {
+        UpdateResolutionOnStart();
         UpdateQualityOnStart();
         UpdateSliderValuesOnStart();
-        // i want it to defaulty not suck :)
-        SetFullscreen(true);
-        SetResolution(resolutions.Length-1);
     }
-    // Sets up UI resolution dropdown
-    void CreateResolutions() {
-        resolutions = Screen.resolutions;
+
+    void CreateResolutionOptions() {
+        Resolution[] resolutions = SettingsManager.Instance.GetResolutions();
         resolutionDropdown.ClearOptions();
         List<string> resolutionList = new List<string>();
-        int index = 0;
-        int currentResIdx = 0;
         foreach (Resolution resolution in resolutions) {
-            string opt = resolution.width + " x " + resolution.height;
-            resolutionList.Add(opt);
-            if(Screen.currentResolution.width == resolution.width && 
-                Screen.currentResolution.height == resolution.height) {
-                currentResIdx = index;
-            }
-            index++;
+            string option = resolution.width + " x " + resolution.height;
+            resolutionList.Add(option);
         }
         resolutionDropdown.AddOptions(resolutionList);
-        resolutionDropdown.value = currentResIdx;
-        resolutionDropdown.RefreshShownValue();
+    }
+
+    void UpdateResolutionOnStart() {
+        CreateResolutionOptions();
+        resolutionDropdown.value = SettingsManager.Instance.GetCurrentResolutionIndex();
     }
 
     void UpdateQualityOnStart() {
-        qualityDropdown.value = QualitySettings.GetQualityLevel();
+        qualityDropdown.value = SettingsManager.Instance.GetQuality();
     }
+
     void UpdateSliderValuesOnStart() {
-        float currentVolume;
-        mixer.GetFloat("Master", out currentVolume);
-        MasterSlider.value = UnMixerizeAudioValue(currentVolume);
-        mixer.GetFloat("Music", out currentVolume);
-        MusicSlider.value = UnMixerizeAudioValue(currentVolume);
-        mixer.GetFloat("Effects", out currentVolume);
-        EffectsSlider.value = UnMixerizeAudioValue(currentVolume);
+        MasterSlider.value = SettingsManager.Instance.GetVolumeMaster();
+        MusicSlider.value = SettingsManager.Instance.GetVolumeMusic();
+        EffectsSlider.value = SettingsManager.Instance.GetVolumeEffects();
     }
 
-    public void SetResolution(int level) {
-        Screen.SetResolution(resolutions[level].width, resolutions[level].height, Screen.fullScreen);
-        print("setting res: " + Screen.currentResolution);
+    public void OnResolutionChange(int level) {
+        SettingsManager.Instance.SetResolution(level);
     }
 
-    public void SetQuality(int level) {
-        QualitySettings.SetQualityLevel(level);
-        print("setting qual: " + QualitySettings.GetQualityLevel());
+    public void OnQualityChange(int level) {
+        SettingsManager.Instance.SetQuality(level);
+        SettingsManager.Instance.SaveSettings();
     }
 
-    public void SetFullscreen(bool fullscreen) {
-        Screen.fullScreen = fullscreen;
-        print("setting fs: " + Screen.fullScreen);
+    public void OnFullscreenToggle(bool fullscreen) {
+        SettingsManager.Instance.SetFullscreen(fullscreen);
+        SettingsManager.Instance.SaveSettings();
     }
 
-    public void SetVolumeMaster(float value) {
-        mixer.SetFloat("Master", MixerizeAudioValue(value));
-    }
-    public void SetVolumeEffects(float value) {
-        mixer.SetFloat("Effects", MixerizeAudioValue(value));
-
-    }
-    public void SetVolumeMusic(float value) {
-        mixer.SetFloat("Music", MixerizeAudioValue(value));
-
+    public void OnVolumeMasterChange(float value) {
+        SettingsManager.Instance.SetVolumeMaster(value);
+        SettingsManager.Instance.SaveSettings();
     }
 
-    float MixerizeAudioValue(float value) {
-        float minDecibels = -80f;
-        float maxDecibels = 5f;
-        return minDecibels + (maxDecibels - minDecibels) * value;
+    public void OnVolumeEffectsChange(float value) {
+        SettingsManager.Instance.SetVolumeEffects(value);
+        SettingsManager.Instance.SaveSettings();
     }
 
-    public float UnMixerizeAudioValue(float decibels) {
-        float minDecibels = -80f;
-        float maxDecibels = 5f;
-        decibels = Mathf.Clamp(decibels, minDecibels, maxDecibels);
-        float normalizedValue = (decibels - minDecibels) / (maxDecibels - minDecibels);
-        return normalizedValue;
+    public void OnVolumeMusicChange(float value) {
+        SettingsManager.Instance.SetVolumeMusic(value);
+        SettingsManager.Instance.SaveSettings();
     }
 
-    // Otevøe naposledy otevøené UI (to které basically zavolalo tohle okno)
     public void GoBack() {
         UImanager.Instance.ShowSavedUI();
         UImanager.Instance.HideUI(UIType.Settings);
@@ -114,5 +86,18 @@ public class Settings : UIBehaviour {
 
     public override void Show() {
         UtilityUI.Fade(canvas, true, 0f);
+        UpdateUISettingsElements();
     }
+}
+
+
+
+[System.Serializable]
+public class SettingsData {
+    public int resolutionIndex;
+    public int qualityLevel;
+    public bool isFullscreen;
+    public float masterVolume;
+    public float musicVolume;
+    public float effectsVolume;
 }

@@ -68,8 +68,8 @@ public class UImanager : MonoBehaviour {
         }
     }
 
-    public void SaveOpenedUI() {
-        savedUI = openedUI;
+    public void SaveOpenedUI(UIType uiType) {
+        savedUI = uiType;
     }
     public void ShowSavedUI() {
         ShowUI(savedUI);

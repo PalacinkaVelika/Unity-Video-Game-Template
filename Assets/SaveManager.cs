@@ -11,6 +11,7 @@ public class SaveManager : MonoBehaviour {
     public static SaveManager Instance { get; private set; }
     private List<ISaveable> saveableObjects;
     private GameData loadedSaveData;
+    private SettingsData loadedSettingsData;
     private string savePath;
 
     void Awake() {
@@ -32,6 +33,15 @@ public class SaveManager : MonoBehaviour {
     public void UnregisterSaveable(ISaveable saveable) {
         if (saveableObjects.Contains(saveable)) {
             saveableObjects.Remove(saveable);
+        }
+    }
+
+    public void ClearSaveData() {
+        GameData saveData = new GameData();
+        loadedSaveData = saveData;
+        BinaryFormatter formatter = new BinaryFormatter();
+        using (FileStream file = File.Create(savePath)) {
+            formatter.Serialize(file, saveData);
         }
     }
 
@@ -76,6 +86,9 @@ public class SaveManager : MonoBehaviour {
     public GameData GetLoadedData() {
         return loadedSaveData;
     }
+    public SettingsData GetLoadedSettingsData() {
+        return loadedSettingsData;
+    }
 
     public void UpdateSaveableList() {
         saveableObjects.Clear();
@@ -91,5 +104,32 @@ public class SaveManager : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void SaveSettings(SettingsData settingsData) {
+        BinaryFormatter formatter = new BinaryFormatter();
+        using (FileStream file = File.Create(GetSettingsPath())) {
+            formatter.Serialize(file, settingsData);
+        }
+    }
+
+    public void LoadSettings() {
+        if (File.Exists(GetSettingsPath())) {
+            try {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using (FileStream file = File.Open(GetSettingsPath(), FileMode.Open)) {
+                    SettingsData settingsData = (SettingsData)formatter.Deserialize(file);
+                    SettingsManager.Instance.ApplySettings(settingsData);
+                }
+            } catch (Exception e) {
+                Debug.LogError("Failed to load settings: " + e.Message);
+            }
+        } else {
+            Debug.LogWarning("Settings file not found!");
+        }
+    }
+        
+    string GetSettingsPath() {
+        return Application.persistentDataPath + "/settings.dat";
     }
 }

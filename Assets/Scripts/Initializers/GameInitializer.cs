@@ -32,6 +32,7 @@ public class GameInitializer : MonoBehaviour {
     }
 
     IEnumerator InitializeGameC() {
+        SaveManager.Instance.LoadSettings();
         PlayLogoAnimation();
         yield return new WaitForSeconds(0.2f);
         var loadTask = SceneLoadingManager.Instance.LoadSceneAsync(SceneType.MainMenuScene, UIanim.GetCurrentAnimatorStateInfo(0).length);

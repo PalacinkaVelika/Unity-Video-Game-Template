@@ -4,8 +4,9 @@ using System;
 using System.Text;
 using UnityEditor;
 using System.IO;
+using System.Collections;
 
-public class InputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour, IObserver {
     public static InputManager Instance { get; private set; }
 
     public InputActionAsset inputActionAsset;
@@ -17,12 +18,20 @@ public class InputManager : MonoBehaviour {
             Destroy(this.gameObject);
         } else {
             Instance = this;
+            StartCoroutine(WaitForGameManagerInitialization());
         }
+
         playerActionMap = inputActionAsset.FindActionMap("Player");
         uiActionMap = inputActionAsset.FindActionMap("UI");
         playerActionMap.Enable();
     }
 
+    IEnumerator WaitForGameManagerInitialization() {
+        while (GameManager.Instance == null) {
+            yield return null;
+        }
+        GameManager.Instance.AddObserver(this);
+    }
     public void SwitchToPlayerControls() {
         uiActionMap.Disable();
         playerActionMap.Enable();
@@ -46,7 +55,7 @@ public class InputManager : MonoBehaviour {
                 if (continuous) action.canceled += callback;
             }
         }
-        
+
     }
 
     public void UnsubscribeFromAction(string actionName, Action<InputAction.CallbackContext> callback, bool continuous = false) {
@@ -64,7 +73,26 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    public void OnNotify<T>(T data) {
+        switch (data) {
+            case GameState.Running:
+                SwitchToPlayerControls();
+                break;
+            case GameState.Paused:
+                SwitchToUIControls();
+                break;
+            case GameState.MainMenu:
+                SwitchToUIControls();
+                break;
+            case GameState.Cutscene:
+                SwitchToUIControls();
+                break;
+            case GameState.Dialogue:
+                SwitchToUIControls();
+                break;
 
+        }
+    }
 }
 
 /*

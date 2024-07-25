@@ -267,7 +267,7 @@ Transform:
   m_Children:
   - {fileID: 796501501}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &86924407
 MonoBehaviour:
@@ -1773,7 +1773,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &435180420
 MonoBehaviour:
@@ -2029,7 +2029,7 @@ Transform:
   m_Children:
   - {fileID: 1848193805}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &521176873
 GameObject:
@@ -3057,7 +3057,7 @@ Transform:
   m_Children:
   - {fileID: 846022732}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &695542524
 MonoBehaviour:
@@ -3072,7 +3072,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 846022731}
-  mixer: {fileID: 24100000, guid: a78c49a09eb8f314aa3867bf103e3231, type: 2}
   resolutionDropdown: {fileID: 2125788235}
   qualityDropdown: {fileID: 1216643562}
   MasterSlider: {fileID: 7915937335674689762}
@@ -3146,7 +3145,7 @@ Transform:
   m_Children:
   - {fileID: 801915388}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &750647555
 MonoBehaviour:
@@ -5131,7 +5130,7 @@ Transform:
   m_Children:
   - {fileID: 1506267833}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1108568862
 MonoBehaviour:
@@ -5220,7 +5219,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1201538787
 GameObject:
@@ -5542,7 +5541,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 695542524}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
-        m_MethodName: SetQuality
+        m_MethodName: OnQualityChange
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6013,6 +6012,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494637175}
   m_CullTransparentMesh: 1
+--- !u!1 &1502121972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1502121974}
+  - component: {fileID: 1502121973}
+  m_Layer: 0
+  m_Name: SettingsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1502121973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502121972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcb344f6862ad2c458773fe2dd16e5ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: a78c49a09eb8f314aa3867bf103e3231, type: 2}
+--- !u!4 &1502121974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502121972}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.67302656, y: 1.2528481, z: -0.07231927}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1506267832
 GameObject:
   m_ObjectHideFlags: 0
@@ -6279,7 +6323,7 @@ Transform:
   m_Children:
   - {fileID: 1569608004}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1547474791
 MonoBehaviour:
@@ -7033,7 +7077,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetVolumeEffects
+      value: OnVolumeEffectsChange
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -7372,7 +7416,7 @@ Transform:
   m_Children:
   - {fileID: 861284099}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1751653551
 MonoBehaviour:
@@ -7877,7 +7921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetVolumeMusic
+      value: OnVolumeMusicChange
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -7931,7 +7975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1848193805
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8223,7 +8267,7 @@ Transform:
   m_Children:
   - {fileID: 1063467223}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1907797670
 GameObject:
@@ -9447,6 +9491,10 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 695542524}
+    - target: {fileID: 4879305125702624173, guid: c743bcbc8d4e4b34eb4ce508bcce1157, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnResolutionChange
+      objectReference: {fileID: 0}
     - target: {fileID: 4879305125702624175, guid: c743bcbc8d4e4b34eb4ce508bcce1157, type: 3}
       propertyPath: m_Name
       value: Resolution
@@ -9590,7 +9638,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetVolumeMaster
+      value: OnVolumeMasterChange
       objectReference: {fileID: 0}
     - target: {fileID: 7915937335260223769, guid: 6931f547a19c145469a01705f7ef72d4, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -9724,5 +9772,9 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 695542524}
+    - target: {fileID: 8440503043062682663, guid: f46c1d89f43aff747bcec5833719e4b2, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnFullscreenToggle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f46c1d89f43aff747bcec5833719e4b2, type: 3}

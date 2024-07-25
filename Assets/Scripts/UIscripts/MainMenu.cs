@@ -34,7 +34,7 @@ public class MainMenu : UIBehaviour {
         if (!loading) {
             loading = true;
             UImanager.Instance.ToggleAllButtonsInUI(UIType.MainMenu, false);
-            StartCoroutine(LoadGameplay());
+            StartCoroutine(LoadNewGameplay());
         }
     }
 
@@ -47,7 +47,7 @@ public class MainMenu : UIBehaviour {
     }
 
     public void GoToSettings() {
-        UImanager.Instance.SaveOpenedUI();
+        UImanager.Instance.SaveOpenedUI(UIType.MainMenu);
         UImanager.Instance.ShowUI(UIType.Settings);
         UImanager.Instance.HideUI(UIType.MainMenu);
     }
@@ -76,7 +76,9 @@ public class MainMenu : UIBehaviour {
         }
     }
 
-    IEnumerator LoadGameplay() {
+    IEnumerator LoadNewGameplay() {
+        // Clear saved data
+        SaveManager.Instance.ClearSaveData();
         // Fade in / loading screen
         FindAnyObjectByType<Fader>().Fade(true, 1f);
         yield return new WaitForSeconds(1.2f);
